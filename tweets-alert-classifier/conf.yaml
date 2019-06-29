@@ -1,0 +1,4 @@
+max_length: 256
+batch_size: 32
+epochs: 2
+vocabulary_size: 6000
