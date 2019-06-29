@@ -104,6 +104,6 @@ venv.bak/
 .mypy_cache/
 
 # myproject
-tweets-alert-classifier/models
-tweets-alert-classifier/datasets/sentiment140/testdata.manual.2009.06.14.csv
-tweets-alert-classifier/datasets/sentiment140/training.1600000.processed.noemoticon.csv
+twitter-sentiment-lstm/models
+twitter-sentiment-lstm/datasets/sentiment140/testdata.manual.2009.06.14.csv
+twitter-sentiment-lstm/datasets/sentiment140/training.1600000.processed.noemoticon.csv
