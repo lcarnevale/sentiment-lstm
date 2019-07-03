@@ -33,7 +33,7 @@ class Sentiment140Reader(Reader):
         """Loads dataset from the file system.
 
         It defines the abstract method of the super class.
-        
+
         Args:
             dataset_dir (str): directory name in which the dataset is
                 stored.
@@ -53,9 +53,5 @@ class Sentiment140Reader(Reader):
         df["sentiment"] = df.sentiment.map({0: 0, 4: 1})
         # renaming culumns as documented
         # df.rename(columns={'text': 'X', 'sentiment': 'y'}, inplace=True)
-
-        # scaling dataset
-        # df = pd.concat([df[:799999].sample(200000), df[800000:].sample(200000)], ignore_index=True, sort=False)
-        # df = pd.concat([df[:799999].sample(1000), df[800000:].sample(1000)], ignore_index=True, sort=False)
 
         return df
