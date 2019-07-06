@@ -1,69 +1,50 @@
+# -*- coding: utf-8 -*-
+
+"""Long Short Term Memory Sentiment Analysis
+
+Use this script for training an LSTM model.
+Define dataset using the right option.
+
+Examples:
+
+
+.. _Google Python Style Guide
+    https://github.com/google/styleguide/blob/gh-pages/pyguide.md
+"""
+
+__copyright__ = 'Copyright 2019, Lorenzo Carnevale'
+__author__ = 'Lorenzo Carnevale <lorenzocarnevale@gmail.com>'
+__credits__ = ''
+__description__ = """Long Short Term Memory Sentiment Analysis
+
+Train script."""
+
 # standard libraries
 import os
 import yaml
 import pickle
 import argparse
-from time import time
 # local libraries
 from readers import readers_factory
 # third parties libraries
 import pandas as pd
-import numpy as np
 from keras_tqdm import TQDMCallback
 from keras.models import Sequential
 from keras.preprocessing.text import Tokenizer
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report, confusion_matrix
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Embedding, LSTM, Dense, GlobalMaxPool1D, Dropout
 
 
-def metrics(model, x_train, y_train, x_test, y_test, X_test_pad):
-    """
-    """
-    # calculating null accuracy
-    if len(x_test[y_test == 0]) / (len(x_test)*1.) > 0.5:
-        null_accuracy = len(x_test[y_test == 0]) / (len(x_test)*1.)
-    else:
-        null_accuracy = 1. - (len(x_test[y_test == 0]) / (len(x_test)*1.))
-
-    # calculating prediction time
-    t0 = time()
-    y_pred = model.predict_classes(x=X_test_pad)
-    train_test_time = time() - t0
-
-    # calculating accuracy
-    accuracy = accuracy_score(y_test, y_pred)
-
-    # calculating classification report
-    report = classification_report(y_test, y_pred)
-
-    # summary
-    print("-"*80)
-    print("Null accuracy: {0:.2f}%".format(null_accuracy*100))
-    print("Accuracy score: {0:.2f}%".format(accuracy*100))
-    if accuracy > null_accuracy:
-        print("Model is {0:.2f}% more accurate than null accuracy".format((accuracy-null_accuracy)*100))
-    elif accuracy == null_accuracy:
-        print("Model has the same accuracy with the null accuracy")
-    else:
-        print("Model is {0:.2f}% less accurate than null accuracy".format((null_accuracy-accuracy)*100))
-    print("-"*80)
-    print("Train and Test time: {0:.2f}s".format(train_test_time))
-    print("-"*80)
-    print("Classification Report\n")
-    print(report)
-    print("-"*80)
-
 def main():
-    """
+    """Main application for trining
     """
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-d", "--dataset",
 						dest="dataset_dir",
 						help="Directory name of the target dataset",
-						type=str)
+						type=str,
+                        required=True)
 
     options = parser.parse_args()
 
@@ -79,33 +60,17 @@ def main():
         os.makedirs(model_dir)
     model_path = os.path.join(model_dir, 'model.h5')
     tokens_path = os.path.join(model_dir, 'tokenizer.pickle')
+    testset_path = os.path.join(model_dir, 'testset.csv')
 
     reader = readers_factory.get_dataset_reader(options.dataset_dir)
 
     dataset = reader.read_dataset(options.dataset_dir)
     X_train, X_test, y_train, y_test = reader.preprocess(dataset)
 
-    # from textblob import TextBlob
-    #
-    # tbresult = [TextBlob(i).sentiment.polarity for i in X_test]
-    # tbpred = [0 if n < 0 else 1 for n in tbresult]
-    # conmat = np.array(confusion_matrix(y_test, tbpred, labels=[1,0]))
-    # confusion = pd.DataFrame(conmat, index=['positive', 'negative'],
-    #                          columns=['predicted_positive','predicted_negative'])
-    # print("Accuracy Score: {0:.2f}%".format(accuracy_score(y_test, tbpred)*100))
-    # print("-"*80)
-    # print("Confusion Matrix\n")
-    # print(confusion)
-    # print("-"*80)
-    # print("Classification Report\n")
-    # print(classification_report(y_test, tbpred))
-
-
     tokenizer = Tokenizer(num_words=vocab_size, oov_token='<UNK>')
     tokenizer.fit_on_texts(X_train)
     X_train_seq = tokenizer.texts_to_sequences(X_train)
     X_test_seq = tokenizer.texts_to_sequences(X_test)
-    # max_length = len(max(X_train_seq,key=len))
     print("Max lenght is %s" % (max_length))
     X_train_pad = pad_sequences(X_train_seq, maxlen=max_length, padding='post')
     X_test_pad = pad_sequences(X_test_seq, maxlen=max_length, padding='post')
@@ -136,16 +101,20 @@ def main():
     print('Accuracy: %f' % (accuracy))
     print('Loss: %f' % (loss))
 
-    metrics(model, X_train, y_train, X_test, y_test, X_test_pad)
-
-    # save model, architecture and tokens
+    # saving model, architecture and tokens
     model.save(model_path)
     print('Saved model to disk')
     with open(tokens_path, 'wb') as handle:
         pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
     print('Saved tokens to disk')
-
-
+    # saving test set
+    y_pred = model.predict_classes(x=X_test_pad)
+    df = pd.DataFrame()
+    df['X_test'] = X_test
+    df['y_test'] = y_test
+    df['y_pred'] = y_pred
+    df.to_csv(testset_path)
+    print('Saved testset to disk')
 
 if __name__ == '__main__':
     main()
