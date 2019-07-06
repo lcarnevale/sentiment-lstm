@@ -1,4 +1,4 @@
-max_length: 256
+max_length: 128
 batch_size: 32
 epochs: 2
 vocabulary_size: 6000
