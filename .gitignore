@@ -104,6 +104,6 @@ venv.bak/
 .mypy_cache/
 
 # myproject
-twitter-sentiment-lstm/models
-twitter-sentiment-lstm/datasets/sentiment140/testdata.manual.2009.06.14.csv
-twitter-sentiment-lstm/datasets/sentiment140/training.1600000.processed.noemoticon.csv
+sentiment-lstm/models
+sentiment-lstm/datasets/sentiment140/testdata.manual.2009.06.14.csv
+sentiment-lstm/datasets/sentiment140/training.1600000.processed.noemoticon.csv
