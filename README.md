@@ -5,12 +5,12 @@
 ### How to run it
 Build the image as follow:
 ```bash
-docker build -t lcarnevale/twitter-sentiment-lstm .
+docker build -t lcarnevale/sentiment-lstm .
 ```
 
 Run the container as follow:
 ```bash
-docker run -d -p 5002:5002 --name twitter-sentiment-lstm lcarnevale/twitter-sentiment-lstm
+docker run -d -p 5002:5002 --name sentiment-lstm lcarnevale/sentiment-lstm
 ```
 
 Try to send a request out as follow:
