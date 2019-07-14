@@ -1,4 +1,4 @@
-# Twitter Sentiment LSTM
+# Sentiment Analysis Using LSTM
 
 ## Microservice
 
