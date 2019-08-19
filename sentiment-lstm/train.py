@@ -36,15 +36,15 @@ from keras.layers import Embedding, LSTM, Dense, GlobalMaxPool1D, Dropout
 
 
 def main():
-    """Main application for trining
+    """Main application for training
     """
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-d", "--dataset",
-						dest="dataset_dir",
-						help="Directory name of the target dataset",
-						type=str,
-                        required=True)
+        dest="dataset_dir",
+		help="Directory name of the target dataset",
+		type=str,
+        required=True)
 
     options = parser.parse_args()
 
