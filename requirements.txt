@@ -26,4 +26,4 @@ soupsieve==1.9.1
 textblob==0.15.3
 Theano==1.0.4
 tqdm==4.32.2
-Werkzeug==0.15.4
+Werkzeug==0.15.5
